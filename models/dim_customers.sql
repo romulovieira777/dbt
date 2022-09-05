@@ -1,3 +1,8 @@
+{{ config (
+    materialized="table"
+)}}
+
+
 WITH customers AS (
     SELECT
         "ID"            AS customer_id
