@@ -1,24 +1,14 @@
-{{ config (
-    materialized="table"
-)}}
-
-
 WITH customers AS (
     SELECT
-        "ID"            AS customer_id
-      , "FIRST_NAME"    AS first_name
-      , "LAST_NAME"     AS last_name
+        *
     FROM
-        public.jaffle_shop_customers
+        {{ ref('stg_customers') }}
 ),
 orders AS (
     SELECT
-        "ID"            AS order_id
-      , "USER_ID"       AS customer_id
-      , "ORDER_DATE"    AS order_date
-      , "STATUS"        AS status
+        *
     FROM
-        public.jaffle_shop_orders
+        {{ ref('fct_orders') }}
 ),
 customer_orders AS (
     SELECT
@@ -26,11 +16,12 @@ customer_orders AS (
       , MIN(order_date) AS first_order_date
       , MAX(order_date) AS most_recent_order_date
       , COUNT(order_id) AS number_of_orders
+      , SUM(amount)     AS lifetime_value
     FROM
         orders
     GROUP BY
         customer_id
-),
+)
 final AS (
     SELECT
         customers.customer_id
@@ -38,7 +29,8 @@ final AS (
       , customers.last_name
       , customer_orders.first_order_date
       , customer_orders.most_recent_order_date
-      , COALESCE(customer_orders.number_of_orders, 0) AS number_of_count
+      , COALESCE(customer_orders.number_of_orders, 0) AS number_of_orders
+      , customer_orders.lifetime_value
     FROM
         customers
     LEFT JOIN
