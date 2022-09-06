@@ -18,7 +18,7 @@ order_payments AS (
         payments
     GROUP BY
         order_id
-)
+),
 final AS (
     SELECT
         orders.order_id

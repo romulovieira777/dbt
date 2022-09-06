@@ -21,7 +21,7 @@ customer_orders AS (
         orders
     GROUP BY
         customer_id
-)
+),
 final AS (
     SELECT
         customers.customer_id
