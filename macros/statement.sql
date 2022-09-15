@@ -6,6 +6,8 @@
 
 {{ my_cool_string }} {{ my_second_string }} I want to write Jinja for {{ my_cool_number }} years!
 
+#}
+
 {% set my_animals = ['lemur', 'wolf', 'panther', 'tardigrade'] %}
 
 {{ my_animals[0] }}
